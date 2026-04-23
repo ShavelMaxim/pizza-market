@@ -1,36 +1,10 @@
-import React, { useContext } from "react";
-import { AppContext } from "../context/context.jsx";
-import { deleteItemFromBasket } from "../utils.js";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { updateQuantity, removeItem } from "../redux/slices/basketSlice.js";
 
 export default function CartItem({ pizza }) {
   const { image, title, orderDescription, quantity, orderPrice, id } = pizza;
-  const { setBasket, basket } = useContext(AppContext);
-
-  const incrementQuantity = (type) => {
-    type === "increment"
-      ? setBasket((prev) => {
-          return prev.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  quantity: item.quantity + 1,
-                  orderPrice: item.price * (item.quantity + 1),
-                }
-              : item,
-          );
-        })
-      : setBasket((prev) => {
-          return prev.map((item) =>
-            item.id === id && item.quantity > 1
-              ? {
-                  ...item,
-                  quantity: item.quantity - 1,
-                  orderPrice: item.price * (item.quantity - 1),
-                }
-              : item,
-          );
-        });
-  };
+  const dispatch = useDispatch();
 
   return (
     <article className="cart-item">
@@ -45,7 +19,7 @@ export default function CartItem({ pizza }) {
         <button
           className="cart-item__action"
           type="button"
-          onClick={() => incrementQuantity("decrement")}
+          onClick={() => dispatch(updateQuantity({ id, type: "decrement" }))}
         >
           -
         </button>
@@ -53,7 +27,7 @@ export default function CartItem({ pizza }) {
         <button
           className="cart-item__action"
           type="button"
-          onClick={() => incrementQuantity("increment")}
+          onClick={() => dispatch(updateQuantity({ id, type: "increment" }))}
         >
           +
         </button>
@@ -63,7 +37,7 @@ export default function CartItem({ pizza }) {
 
       <button
         onClick={() => {
-          deleteItemFromBasket(id, setBasket, basket);
+          dispatch(removeItem(pizza.orderName));
         }}
         className="cart-item__remove"
         type="button"

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    /* 1. Исправляем target на более современный (рекомендуется ESNext или ES2022) */
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+
+    /* 2. Исправляем moduleResolution на bundler (стандарт для Vite) */
+    /* Это уберет ошибку про node10 */
+    "moduleResolution": "bundler",
+
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}

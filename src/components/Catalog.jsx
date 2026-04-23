@@ -1,41 +1,22 @@
-import React, { useContext } from "react";
+import React from "react";
 import PizzaCard from "./PizzaCard.jsx";
 import { AppContext } from "../context/context.jsx";
 import { capitalize } from "../utils.js";
+import { replacements } from "../data/constans.js";
+import { useCatalog } from "../hooks/useCatalog.js";
 
 export default function Catalog() {
-  const { category, selectedOption, menuList } = useContext(AppContext);
-  const replacements = {
-    Мясная: "Мясные",
-    Вегетарианская: "Вегетарианские",
-    Острая: "Острые",
-    Закрытая: "Закрытые",
-  };
-
-  const filteredCategoryPizzas =
-    category === "Все"
-      ? menuList
-      : menuList.filter((pizza) => {
-          return pizza.category.toLowerCase() === category.toLowerCase();
-        });
-
-  const filteredOptionPizzas =
-    selectedOption === "популярности"
-      ? filteredCategoryPizzas
-      : selectedOption === "цене"
-        ? [...filteredCategoryPizzas].sort((a, b) => a.price - b.price)
-        : [...filteredCategoryPizzas].sort((a, b) =>
-            a.title.localeCompare(b.title, "ru", { sensitivity: "base" }),
-          );
+  const { filteredOptionPizzas, selectCategory } = useCatalog();
 
   return (
     <section className="catalog" aria-labelledby="catalog-title">
       <h1 className="catalog__title" id="catalog-title">
-        {replacements[capitalize(category)] || capitalize(category)} пиццы
+        {replacements[capitalize(selectCategory)] || capitalize(selectCategory)}{" "}
+        пиццы
       </h1>
       <div className="catalog__grid">
-        {filteredOptionPizzas.map((pizza, index) => (
-          <PizzaCard key={`${pizza.title}-${index}`} pizza={pizza} />
+        {filteredOptionPizzas.map((pizza) => (
+          <PizzaCard key={pizza.id} pizza={pizza} />
         ))}
       </div>
     </section>

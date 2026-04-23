@@ -1,11 +1,8 @@
 import React, { useContext } from "react";
 import { AppContext } from "../context/context.jsx";
-import {
-  buildPizzaState,
-  changePrice,
-  createBasketItem,
-  modifyOrderName,
-} from "../utils.js";
+import { useSelector, useDispatch } from "react-redux";
+import { addItem, removeItem } from "../redux/slices/basketSlice.js";
+import { buildPizzaState, changePrice, createBasketItem } from "../utils.js";
 
 function renderOptionClass(option) {
   return [
@@ -17,14 +14,21 @@ function renderOptionClass(option) {
 }
 
 export default function PizzaCard({ pizza }) {
-  const { setMenuList, setBasket, basket } = useContext(AppContext);
+  const { setMenuList } = useContext(AppContext);
+  const basket = useSelector((state) => state.basket.defaultValue);
+  const dispatch = useDispatch();
 
-  const { title, image, doughs = [], sizes = [], basePrice, price } = pizza;
-  const currentOrderName = modifyOrderName(pizza);
+  const {
+    title,
+    image,
+    doughs = [],
+    sizes = [],
+    basePrice,
+    price,
+    orderName,
+  } = pizza;
 
-  const isAddedToBasket = basket.some(
-    (item) => item.orderName === currentOrderName,
-  );
+  const isAddedToBasket = basket.some((item) => item.orderName === orderName);
 
   const handleAddToOption = (types, option) => {
     const updatedOptions = pizza[types].map((item) =>
@@ -68,7 +72,7 @@ export default function PizzaCard({ pizza }) {
             <button
               onClick={() => handleAddToOption("doughs", option)}
               className={renderOptionClass(option)}
-              key={option.label}
+              key={`dough-${option.label}`}
               type="button"
             >
               {option.label}
@@ -81,7 +85,7 @@ export default function PizzaCard({ pizza }) {
             <button
               onClick={() => handleAddToOption("sizes", option)}
               className={renderOptionClass(option)}
-              key={option.label}
+              key={`size-${option.label}`}
               type="button"
             >
               {option.label}
@@ -95,9 +99,7 @@ export default function PizzaCard({ pizza }) {
         {isAddedToBasket ? (
           <button
             onClick={() => {
-              setBasket((prev) =>
-                prev.filter((item) => item.orderName !== currentOrderName),
-              );
+              dispatch(removeItem(orderName));
             }}
             className="pizza-card__add pizza-card__add--active"
             type="button"
@@ -108,7 +110,7 @@ export default function PizzaCard({ pizza }) {
         ) : (
           <button
             onClick={() => {
-              setBasket((prev) => [...prev, createBasketItem(pizza)]);
+              dispatch(addItem(createBasketItem(pizza)));
             }}
             className="pizza-card__add"
             type="button"

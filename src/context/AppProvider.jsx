@@ -10,6 +10,9 @@ export default function AppProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [orderSheet, setOrderSheet] = useState([]);
   const [menuList, setMenuList] = useState(modifyPizzas(pizzas));
+  const [searchValue, setSearchValue] = useState("");
+  const [total, setTotal] = useState(() => menuList.length);
+
   const options = useRef(["популярности", "цене", "алфавиту"]);
 
   return (
@@ -27,7 +30,11 @@ export default function AppProvider({ children }) {
         orderSheet,
         setOrderSheet,
         menuList,
+        total,
+        setTotal,
         setMenuList,
+        searchValue,
+        setSearchValue,
       }}
     >
       {children}

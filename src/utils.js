@@ -102,3 +102,8 @@ export const getQuantityInBaskets = (basket) => {
     return total + qty;
   }, 0);
 };
+
+export const getPizzasForPage = (pizzas, currentPage, pageSize = 4) => {
+  const startIndex = currentPage * pageSize - pageSize;
+  return pizzas.slice(startIndex, startIndex + pageSize);
+};

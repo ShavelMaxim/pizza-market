@@ -1,10 +1,14 @@
-import React, { useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext, useState } from "react";
 import { AppContext } from "../context/context.jsx";
+import { useDispatch } from "react-redux";
+import { setFilter } from "../redux/slices/filiterSlice.js";
 
 export default function Filters() {
+  const [isOpen, setIsOpen] = useState(false);
   const filtersRef = useRef(null);
-  const { selectedOption, setSelectedOption, options, isOpen, setIsOpen } =
-    useContext(AppContext);
+  const { selectedOption } = useContext(AppContext);
+  const dispatch = useDispatch();
+  const options = ["популярности", "цене", "алфавиту"];
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -38,7 +42,7 @@ export default function Filters() {
 
       {isOpen ? (
         <div className="filters__menu" role="listbox">
-          {options.current.map((option) => {
+          {options.map((option) => {
             const isSelected = option === selectedOption;
 
             return (
@@ -48,7 +52,7 @@ export default function Filters() {
                 key={option}
                 type="button"
                 onClick={() => {
-                  setSelectedOption(option);
+                  dispatch(setFilter(option));
                   setIsOpen(false);
                 }}
               >

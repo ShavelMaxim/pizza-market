@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "../assets/icons/Logo.svg";
 import Basket from "../assets/icons/Basket.svg";
 import { AppContext } from "../context/context.jsx";
 import { getOrderSummary, getQuantityInBaskets } from "../utils.js";
+import Search from "./Search.jsx";
+import { useSelector } from "react-redux";
 
 export default function Header({ showBasket = true }) {
-  const { basket } = useContext(AppContext);
+  const basket = useSelector((state) => state.basket.defaultValue);
 
   return (
     <header className="header">
@@ -20,6 +22,8 @@ export default function Header({ showBasket = true }) {
             <span className="header__subtitle">Самая реактивная пицца</span>
           </div>
         </Link>
+
+        {showBasket && <Search />}
 
         {showBasket ? (
           <Link className="header__basket" to="/cart">

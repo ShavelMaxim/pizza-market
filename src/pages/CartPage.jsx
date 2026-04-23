@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import CartItem from "../components/CartItem.jsx";
-import { AppContext } from "../context/context.jsx";
 import { getOrderSummary, getQuantityInBaskets } from "../utils.js";
+import { useSelector, useDispatch } from "react-redux";
+import { clearBasket } from "../redux/slices/basketSlice.js";
 
 function CartIcon() {
   return (
@@ -59,7 +60,8 @@ function TrashIcon() {
 }
 
 export default function CartPage() {
-  const { basket, setBasket } = useContext(AppContext);
+  const basket = useSelector((state) => state.basket.defaultValue);
+  const dispatch = useDispatch();
 
   return (
     <section className="cart-page">
@@ -71,7 +73,7 @@ export default function CartPage() {
 
         <Link
           onClick={() => {
-            setBasket([]);
+            dispatch(clearBasket());
           }}
           className="cart-page__clear"
           to="/cart-empty"
@@ -83,7 +85,7 @@ export default function CartPage() {
 
       <div className="cart-page__list">
         {basket.map((item) => (
-          <CartItem key={`${item.title}_${item.description}`} pizza={item} />
+          <CartItem key={item.id} pizza={item} />
         ))}
       </div>
 
